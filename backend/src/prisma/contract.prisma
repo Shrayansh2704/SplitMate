@@ -1,0 +1,147 @@
+enum FriendRequestStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+enum SplitType {
+  EQUAL
+  EXACT
+}
+
+model User {
+  id             Int      @id @default(autoincrement())
+  email          String   @unique
+  passwordHash   String?
+  name           String
+  emailVerified  Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  accounts       Account[]
+  otpVerifications OtpVerification[]
+
+  sentFriendRequests     FriendRequest[] @relation("SentFriendRequests")
+  receivedFriendRequests FriendRequest[] @relation("ReceivedFriendRequests")
+
+  friendshipsAsUser1 Friendship[] @relation("FriendshipUser1")
+  friendshipsAsUser2 Friendship[] @relation("FriendshipUser2")
+
+  groupsCreated Group[] @relation("GroupCreator")
+  groupMembers  GroupMember[]
+
+  expensesPaid Expense[] @relation("ExpensePayer")
+  expenseSplits ExpenseSplit[]
+
+  settlementsPaid     Settlement[] @relation("SettlementPayer")
+  settlementsReceived Settlement[] @relation("SettlementReceiver")
+}
+
+model Account {
+  id                Int    @id @default(autoincrement())
+  userId            Int
+  provider          String
+  providerAccountId String
+  user              User   @relation(fields: [userId], references: [id])
+
+  @@unique([provider, providerAccountId])
+}
+
+model OtpVerification {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  otpHash    String
+  expiresAt  DateTime
+  verifiedAt DateTime?
+  attempts   Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model FriendRequest {
+  id         Int                 @id @default(autoincrement())
+  senderId   Int
+  receiverId Int
+  status     FriendRequestStatus @default(PENDING)
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
+
+  sender   User @relation("SentFriendRequests", fields: [senderId], references: [id])
+  receiver User @relation("ReceivedFriendRequests", fields: [receiverId], references: [id])
+
+  @@unique([senderId, receiverId])
+}
+
+model Friendship {
+  id        Int      @id @default(autoincrement())
+  user1Id   Int
+  user2Id   Int
+  createdAt DateTime @default(now())
+
+  user1 User @relation("FriendshipUser1", fields: [user1Id], references: [id])
+  user2 User @relation("FriendshipUser2", fields: [user2Id], references: [id])
+
+  @@unique([user1Id, user2Id])
+}
+
+model Group {
+  id        Int      @id @default(autoincrement())
+  name      String
+  creatorId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  creator  User          @relation("GroupCreator", fields: [creatorId], references: [id])
+  members  GroupMember[]
+  expenses Expense[]
+}
+
+model GroupMember {
+  id       Int @id @default(autoincrement())
+  groupId  Int
+  userId   Int
+
+  group Group @relation(fields: [groupId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+
+  @@unique([groupId, userId])
+}
+
+model Expense {
+  id          Int      @id @default(autoincrement())
+  groupId     Int
+  payerId     Int
+  description String
+  amount      Decimal
+  splitType   SplitType
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  group  Group          @relation(fields: [groupId], references: [id])
+  payer  User           @relation("ExpensePayer", fields: [payerId], references: [id])
+  splits ExpenseSplit[]
+}
+
+model ExpenseSplit {
+  id        Int     @id @default(autoincrement())
+  expenseId Int
+  userId    Int
+  amount    Decimal
+
+  expense Expense @relation(fields: [expenseId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+
+  @@unique([expenseId, userId])
+}
+
+model Settlement {
+  id         Int      @id @default(autoincrement())
+  payerId    Int
+  receiverId Int
+  amount     Decimal
+  createdAt  DateTime @default(now())
+
+  payer    User @relation("SettlementPayer", fields: [payerId], references: [id])
+  receiver User @relation("SettlementReceiver", fields: [receiverId], references: [id])
+}
