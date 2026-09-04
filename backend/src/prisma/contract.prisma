@@ -1,3 +1,5 @@
+// use prisma-next
+
 enum FriendRequestStatus {
   PENDING
   ACCEPTED
@@ -15,8 +17,9 @@ model User {
   passwordHash   String?
   name           String
   emailVerified  Boolean  @default(false)
+  emailVerifiedAt DateTime?
   createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  updatedAt      temporal.updatedAt()
 
   accounts       Account[]
   otpVerifications OtpVerification[]
@@ -52,7 +55,6 @@ model OtpVerification {
   userId     Int
   otpHash    String
   expiresAt  DateTime
-  verifiedAt DateTime?
   attempts   Int      @default(0)
   createdAt  DateTime @default(now())
 
@@ -65,7 +67,7 @@ model FriendRequest {
   receiverId Int
   status     FriendRequestStatus @default(PENDING)
   createdAt  DateTime            @default(now())
-  updatedAt  DateTime            @updatedAt
+  updatedAt  temporal.updatedAt()
 
   sender   User @relation("SentFriendRequests", fields: [senderId], references: [id])
   receiver User @relation("ReceivedFriendRequests", fields: [receiverId], references: [id])
@@ -90,7 +92,7 @@ model Group {
   name      String
   creatorId Int
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt temporal.updatedAt()
 
   creator  User          @relation("GroupCreator", fields: [creatorId], references: [id])
   members  GroupMember[]
@@ -116,7 +118,7 @@ model Expense {
   amount      Decimal
   splitType   SplitType
   createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  updatedAt   temporal.updatedAt()
 
   group  Group          @relation(fields: [groupId], references: [id])
   payer  User           @relation("ExpensePayer", fields: [payerId], references: [id])
