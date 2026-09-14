@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import {generateOTP} from "../utils/otp.js";
 import { Temporal } from "temporal-polyfill";
 import { AppError } from "../utils/app-error.js";
+import { generateToken } from "../utils/jwt.js";
 
 export const registerUser = async(
     name : string, 
@@ -132,3 +133,38 @@ export const resendOtp = async (userId: number) => {
         otp,
     };
 };
+
+export const loginUser = async(email : string, password : string)=>{
+    const user = await db.orm.public.User.where({email}).first();
+
+    if(!user){
+        throw new AppError("Invalid email or password", 401);
+    }
+
+    if(!user.emailVerified){
+        throw new AppError("Email not Verified, Please verify your email first", 403);
+    }
+
+    if(!user.passwordHash){
+        throw new AppError("Please login using Google", 400);
+    }
+
+    const isPassword = await bcrypt.compare(password, user.passwordHash);
+
+    if(!isPassword){
+        throw new AppError("Invalid email or password", 401);
+    }
+
+    const token = generateToken(user.id);
+
+    return {
+        message : "Login Successful",
+        token,
+        user : {
+            id : user.id,
+            name : user.name,
+            email : user.email,
+        },
+    };
+};
+
