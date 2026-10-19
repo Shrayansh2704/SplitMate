@@ -1,6 +1,7 @@
 import {Response} from "express";
 import { AuthRequest } from "../middleware/auth.middleware";
-import { sendFriendRequest, getFriendRequest } from "../services/friend.service";
+import { sendFriendRequest, getFriendRequest, acceptFriendRequest } from "../services/friend.service";
+import { AppError } from "../utils/app-error";
 
 export const sendRequest = async(req : AuthRequest, res : Response)=>{
     const { receiverId } = req.body;
@@ -11,4 +12,16 @@ export const sendRequest = async(req : AuthRequest, res : Response)=>{
 export const getReceivedRequests = async(req : AuthRequest, res : Response)=>{
     const requests = await getFriendRequest(req.userId!);
     res.status(200).json(requests);
+}
+
+export const acceptRequest = async(req : AuthRequest, res : Response)=>{
+    const requestId = Number(req.params.requestId);
+
+    if(!Number.isInteger(requestId) || requestId<=0){
+        throw new AppError("Invalid Friend Request Id", 400)
+    }
+
+    const result = await acceptFriendRequest(requestId, req.userId!);
+
+    res.status(200).json(result);
 }

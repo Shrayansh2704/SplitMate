@@ -44,3 +44,21 @@ export const getFriendRequest = async(userId : number)=>{
     }))
     return result;
 }
+
+export const acceptFriendRequest = async(requestId : number, receiverId : number)=>{
+    return await db.transaction(async(tx)=>{
+        const request = await tx.orm.public.FriendRequest.where({id : requestId, receiverId, status : "PENDING"}).first();
+        if(!request){
+            throw new AppError("Friend reuest not found of already Processed", 404);
+        }
+
+        const userId1 = Math.min(request.senderId, request.receiverId);
+        const userId2 = Math.max(request.senderId, request.receiverId);
+        
+        await tx.orm.public.FriendRequest.where({id : request.id}).update({status : "ACCEPTED"})
+
+        return {
+            message : "Friend Request Accepted Successfully",
+        };
+    });
+}
