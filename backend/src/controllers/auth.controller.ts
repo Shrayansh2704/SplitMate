@@ -48,3 +48,4 @@ export const getMe = async(req : AuthRequest, res : Response)=>{
         emailVerified : user.emailVerified,
     });
 };
+
