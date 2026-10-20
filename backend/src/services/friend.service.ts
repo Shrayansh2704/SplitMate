@@ -54,6 +54,11 @@ export const acceptFriendRequest = async(requestId : number, receiverId : number
 
         const userId1 = Math.min(request.senderId, request.receiverId);
         const userId2 = Math.max(request.senderId, request.receiverId);
+
+        await tx.orm.public.Friendship.create({
+            user1Id : userId1,
+            user2Id : userId2,
+        });
         
         await tx.orm.public.FriendRequest.where({id : request.id}).update({status : "ACCEPTED"})
 
@@ -77,3 +82,28 @@ export const rejectFriendRequest = async(requestId : number, receiverId : number
     };
 
 }
+
+export const getFriends = async(userId : number)=>{
+    const friendships1 = await db.orm.public.Friendship.where({user1Id : userId}).all();
+    const friendships2 = await db.orm.public.Friendship.where({user2Id : userId}).all();
+    const friendIds = [
+        ...friendships1.map((friendship)=>friendship.user2Id),
+        ...friendships2.map((friendship)=>friendship.user1Id),
+    ];
+
+    const friends = await Promise.all(
+        friendIds.map(async(friendId)=>{
+            const user = await db.orm.public.User.where({id : friendId}).first();
+
+            if(!user) return null;
+
+            return {
+                id : user.id,
+                name : user.name,
+                email : user.email,
+            };
+        })
+    );
+    return friends.filter((friend) => friend !== null);
+
+}   

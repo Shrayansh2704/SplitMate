@@ -1,6 +1,6 @@
 import {Response} from "express";
 import { AuthRequest } from "../middleware/auth.middleware";
-import { sendFriendRequest, getFriendRequest, acceptFriendRequest, rejectFriendRequest} from "../services/friend.service";
+import { sendFriendRequest, getFriendRequest, acceptFriendRequest, rejectFriendRequest, getFriends} from "../services/friend.service";
 import { AppError } from "../utils/app-error";
 
 export const sendRequest = async(req : AuthRequest, res : Response)=>{
@@ -35,4 +35,9 @@ export const rejectRequest = async(req : AuthRequest, res : Response)=>{
 
     const result = await rejectFriendRequest(requestId, req.userId!);
     res.status(200).json(result);
+}
+
+export const getFriendsList = async(req : AuthRequest, res : Response)=>{
+    const friends = await getFriends(req.userId!);
+    res.status(200).json(friends);
 }
