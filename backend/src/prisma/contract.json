@@ -59,10 +59,6 @@
               {
                 "name": "ACCEPTED",
                 "value": "ACCEPTED"
-              },
-              {
-                "name": "REJECTED",
-                "value": "REJECTED"
               }
             ]
           },
@@ -1490,8 +1486,8 @@
             "friendRequest": {
               "checks": [
                 {
-                  "expression": "\"status\" IN ('PENDING', 'ACCEPTED', 'REJECTED')",
-                  "name": "friendRequest_status_check_904c6455",
+                  "expression": "\"status\" IN ('PENDING', 'ACCEPTED')",
+                  "name": "friendRequest_status_check_f0e5c74c",
                   "prefix": "friendRequest_status_check"
                 }
               ],
@@ -2118,8 +2114,7 @@
               "kind": "valueSet",
               "values": [
                 "PENDING",
-                "ACCEPTED",
-                "REJECTED"
+                "ACCEPTED"
               ]
             },
             "SplitType": {
@@ -2135,7 +2130,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "863813db2628b97e4ce3681f5eb63a8df7a6bc79fe172ac5dde7bdcc6f8ffaa4"
+    "storageHash": "1794c4e23fccfe6f090e23f5b186b4b52deb7965553c136d754af26919d65296"
   },
   "execution": {
     "executionHash": "1cde74562a56800ac3db32ecee296362c5894656594ca9695543527b6a9ed531",

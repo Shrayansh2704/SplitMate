@@ -62,3 +62,18 @@ export const acceptFriendRequest = async(requestId : number, receiverId : number
         };
     });
 }
+
+export const rejectFriendRequest = async(requestId : number, receiverId : number)=>{
+    const request = await db.orm.public.FriendRequest.where({id : requestId, receiverId, status : "PENDING"}).first();
+
+    if(!request){
+        throw new AppError("Friend Request not found or already Processed", 404);
+    }
+
+    await db.orm.public.FriendRequest.where({id : request.id}).delete();
+
+    return {
+        message : "Friend Request rejected successfully"
+    };
+
+}

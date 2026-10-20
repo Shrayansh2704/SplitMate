@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'863813db2628b97e4ce3681f5eb63a8df7a6bc79fe172ac5dde7bdcc6f8ffaa4'>;
+  StorageHashBase<'1794c4e23fccfe6f090e23f5b186b4b52deb7965553c136d754af26919d65296'>;
 export type ExecutionHash =
   ExecutionHashBase<'1cde74562a56800ac3db32ecee296362c5894656594ca9695543527b6a9ed531'>;
 export type ProfileHash =
@@ -267,7 +267,7 @@ export type FieldOutputTypes = {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly senderId: CodecTypes['pg/int4@1']['output'];
       readonly receiverId: CodecTypes['pg/int4@1']['output'];
-      readonly status: 'PENDING' | 'ACCEPTED' | 'REJECTED';
+      readonly status: 'PENDING' | 'ACCEPTED';
       readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
       readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
     };
@@ -344,7 +344,7 @@ export type FieldInputTypes = {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly senderId: CodecTypes['pg/int4@1']['input'];
       readonly receiverId: CodecTypes['pg/int4@1']['input'];
-      readonly status: 'PENDING' | 'ACCEPTED' | 'REJECTED';
+      readonly status: 'PENDING' | 'ACCEPTED';
       readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
       readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
     };
@@ -422,7 +422,7 @@ export type StorageColumnTypes = {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly receiverId: CodecTypes['pg/int4@1']['output'];
       readonly senderId: CodecTypes['pg/int4@1']['output'];
-      readonly status: 'PENDING' | 'ACCEPTED' | 'REJECTED';
+      readonly status: 'PENDING' | 'ACCEPTED';
       readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
     };
     readonly friendship: {
@@ -499,7 +499,7 @@ export type StorageColumnInputTypes = {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly receiverId: CodecTypes['pg/int4@1']['input'];
       readonly senderId: CodecTypes['pg/int4@1']['input'];
-      readonly status: 'PENDING' | 'ACCEPTED' | 'REJECTED';
+      readonly status: 'PENDING' | 'ACCEPTED';
       readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
     };
     readonly friendship: {
@@ -1261,7 +1261,7 @@ type ContractBase = Omit<
           readonly valueSet: {
             readonly FriendRequestStatus: {
               readonly kind: 'valueSet';
-              readonly values: readonly ['PENDING', 'ACCEPTED', 'REJECTED'];
+              readonly values: readonly ['PENDING', 'ACCEPTED'];
             };
             readonly SplitType: {
               readonly kind: 'valueSet';
@@ -2036,7 +2036,6 @@ type ContractBase = Omit<
             readonly members: readonly [
               { readonly name: 'PENDING'; readonly value: 'PENDING' },
               { readonly name: 'ACCEPTED'; readonly value: 'ACCEPTED' },
-              { readonly name: 'REJECTED'; readonly value: 'REJECTED' },
             ];
           };
           readonly SplitType: {

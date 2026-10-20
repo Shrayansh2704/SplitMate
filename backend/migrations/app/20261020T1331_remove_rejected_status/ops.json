@@ -1,0 +1,86 @@
+[
+  {
+    "id": "dropCheckConstraint.friendRequest.friendRequest_status_check_904c6455",
+    "label": "Drop check constraint \"friendRequest_status_check_904c6455\" on \"friendRequest\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "friendRequest_status_check_904c6455",
+        "table": "friendRequest"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"friendRequest_status_check_904c6455\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "friendRequest_status_check_904c6455",
+          "public",
+          "\"public\".\"friendRequest\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop check constraint \"friendRequest_status_check_904c6455\"",
+        "sql": "ALTER TABLE \"public\".\"friendRequest\" DROP CONSTRAINT \"friendRequest_status_check_904c6455\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"friendRequest_status_check_904c6455\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "friendRequest_status_check_904c6455",
+          "public",
+          "\"public\".\"friendRequest\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.friendRequest.friendRequest_status_check_f0e5c74c",
+    "label": "Add check constraint \"friendRequest_status_check_f0e5c74c\" on \"friendRequest\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "friendRequest_status_check_f0e5c74c",
+        "table": "friendRequest"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"friendRequest_status_check_f0e5c74c\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "friendRequest_status_check_f0e5c74c",
+          "public",
+          "\"public\".\"friendRequest\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"friendRequest_status_check_f0e5c74c\"",
+        "sql": "ALTER TABLE \"public\".\"friendRequest\" ADD CONSTRAINT \"friendRequest_status_check_f0e5c74c\" CHECK (\"status\" IN ('PENDING', 'ACCEPTED'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"friendRequest_status_check_f0e5c74c\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "friendRequest_status_check_f0e5c74c",
+          "public",
+          "\"public\".\"friendRequest\""
+        ]
+      }
+    ]
+  }
+]

@@ -3,7 +3,7 @@
 enum FriendRequestStatus {
   PENDING
   ACCEPTED
-  REJECTED
+  
 }
 
 enum SplitType {
