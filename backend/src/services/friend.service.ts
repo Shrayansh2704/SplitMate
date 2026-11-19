@@ -1,3 +1,4 @@
+import { reverse } from "dns";
 import {db} from "../prisma/db.js";
 import {AppError} from "../utils/app-error.js";
 
@@ -16,7 +17,8 @@ export const sendFriendRequest = async(senderId : number, receiverId : number)=>
     if(friendship) throw new AppError("You already have a friendship with this user", 400);
 
     const existingRequest = await db.orm.public.FriendRequest.where({senderId, receiverId}).first();
-    if(existingRequest) throw new AppError("You already have a pending friend request", 400);
+    const reverseRequest = await db.orm.public.FriendRequest.where({senderId : receiverId, receiverId : senderId}).first();
+    if(existingRequest || reverseRequest) throw new AppError("You already have a pending friend request", 400);
 
     const request = await db.orm.public.FriendRequest.create({
         senderId,
